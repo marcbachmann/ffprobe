@@ -1,0 +1,25 @@
+[package]
+name = "ffprobe"
+version = "1.0.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+[features]
+static = ["ffmpeg-next/static"]
+
+[dependencies]
+napi = { version = "3", default-features = false, features = ["async", "napi5", "serde-json"] }
+napi-derive = "3"
+ffmpeg-next = { git = "https://github.com/AdrianEddy/rust-ffmpeg", branch = "custom_io", default-features = false, features = ["format", "software-resampling"] }
+serde_json = "1"
+tokio = { version = "1", features = ["rt", "sync", "macros"] }
+tempfile = "3"
+
+[build-dependencies]
+napi-build = "2"
+
+[profile.release]
+lto = true
+strip = "symbols"

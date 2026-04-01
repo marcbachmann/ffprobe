@@ -1,0 +1,75 @@
+{
+  "chapters": [],
+  "format": {
+    "bit_rate": "126920",
+    "duration": "1.000000",
+    "format_long_name": "QuickTime / MOV",
+    "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+    "nb_programs": 0,
+    "nb_stream_groups": 0,
+    "nb_streams": 1,
+    "probe_score": 100,
+    "size": "15865",
+    "start_time": "0.000000",
+    "tags": {
+      "compatible_brands": "M4A isomiso2",
+      "encoder": "Lavf62.3.100",
+      "major_brand": "M4A ",
+      "minor_version": "512"
+    }
+  },
+  "streams": [
+    {
+      "avg_frame_rate": "0/0",
+      "bit_rate": "116330",
+      "bits_per_sample": 0,
+      "channel_layout": "mono",
+      "channels": 1,
+      "codec_long_name": "AAC (Advanced Audio Coding)",
+      "codec_name": "aac",
+      "codec_tag": "0x6134706d",
+      "codec_tag_string": "mp4a",
+      "codec_type": "audio",
+      "disposition": {
+        "attached_pic": 0,
+        "captions": 0,
+        "clean_effects": 0,
+        "comment": 0,
+        "default": 1,
+        "dependent": 0,
+        "descriptions": 0,
+        "dub": 0,
+        "forced": 0,
+        "hearing_impaired": 0,
+        "karaoke": 0,
+        "lyrics": 0,
+        "metadata": 0,
+        "multilayer": 0,
+        "non_diegetic": 0,
+        "original": 0,
+        "still_image": 0,
+        "timed_thumbnails": 0,
+        "visual_impaired": 0
+      },
+      "duration": "1.000000",
+      "duration_ts": 44100,
+      "extradata_size": 5,
+      "id": "0x1",
+      "index": 0,
+      "initial_padding": 0,
+      "mime_codec_string": "mp4a.40.2",
+      "nb_frames": "45",
+      "profile": "LC",
+      "r_frame_rate": "0/0",
+      "sample_fmt": "fltp",
+      "sample_rate": "44100",
+      "start_pts": 0,
+      "start_time": "0.000000",
+      "tags": {
+        "handler_name": "SoundHandler",
+        "language": "und"
+      },
+      "time_base": "1/44100"
+    }
+  ]
+}

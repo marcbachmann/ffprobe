@@ -1,0 +1,11 @@
+Cargo.toml
+Cargo.lock
+build.rs
+src/
+target/
+.github/
+artifacts/
+npm/
+*.node
+CLAUDE.md
+.serena/

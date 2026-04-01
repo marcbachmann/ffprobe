@@ -1,0 +1,19 @@
+{
+  "name": "@marcbachmann/ffprobe-linux-arm64-gnu",
+  "version": "1.0.0",
+  "description": "ffprobe native binary for Linux arm64 glibc (Debian/Ubuntu)",
+  "os": [
+    "linux"
+  ],
+  "cpu": [
+    "arm64"
+  ],
+  "libc": [
+    "glibc"
+  ],
+  "main": "ffprobe.linux-arm64-gnu.node",
+  "files": [
+    "ffprobe.linux-arm64-gnu.node"
+  ],
+  "license": "MIT"
+}

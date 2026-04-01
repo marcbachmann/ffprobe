@@ -1,0 +1,16 @@
+{
+  "name": "@marcbachmann/ffprobe-darwin-x64",
+  "version": "1.0.0",
+  "description": "ffprobe native binary for macOS x64",
+  "os": [
+    "darwin"
+  ],
+  "cpu": [
+    "x64"
+  ],
+  "main": "ffprobe.darwin-x64.node",
+  "files": [
+    "ffprobe.darwin-x64.node"
+  ],
+  "license": "MIT"
+}

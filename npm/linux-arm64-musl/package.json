@@ -1,0 +1,19 @@
+{
+  "name": "@marcbachmann/ffprobe-linux-arm64-musl",
+  "version": "1.0.0",
+  "description": "ffprobe native binary for Linux arm64 musl (Alpine)",
+  "os": [
+    "linux"
+  ],
+  "cpu": [
+    "arm64"
+  ],
+  "libc": [
+    "musl"
+  ],
+  "main": "ffprobe.linux-arm64-musl.node",
+  "files": [
+    "ffprobe.linux-arm64-musl.node"
+  ],
+  "license": "MIT"
+}

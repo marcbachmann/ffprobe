@@ -1,0 +1,8 @@
+target/
+artifacts/
+*.node
+CLAUDE.md
+.claude/
+.serena/
+ffmpeg-build/
+ffmpeg-static/

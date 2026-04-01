@@ -1,0 +1,16 @@
+{
+  "name": "@marcbachmann/ffprobe-darwin-arm64",
+  "version": "1.0.0",
+  "description": "ffprobe native binary for macOS arm64 (Apple Silicon)",
+  "os": [
+    "darwin"
+  ],
+  "cpu": [
+    "arm64"
+  ],
+  "main": "ffprobe.darwin-arm64.node",
+  "files": [
+    "ffprobe.darwin-arm64.node"
+  ],
+  "license": "MIT"
+}

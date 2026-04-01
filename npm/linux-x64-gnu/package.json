@@ -1,0 +1,19 @@
+{
+  "name": "@marcbachmann/ffprobe-linux-x64-gnu",
+  "version": "1.0.0",
+  "description": "ffprobe native binary for Linux x64 glibc (Debian/Ubuntu)",
+  "os": [
+    "linux"
+  ],
+  "cpu": [
+    "x64"
+  ],
+  "libc": [
+    "glibc"
+  ],
+  "main": "ffprobe.linux-x64-gnu.node",
+  "files": [
+    "ffprobe.linux-x64-gnu.node"
+  ],
+  "license": "MIT"
+}
