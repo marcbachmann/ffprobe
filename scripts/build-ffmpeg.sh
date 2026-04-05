@@ -7,6 +7,7 @@ EXTRA_CFLAGS="${EXTRA_CFLAGS:-}"
 EXTRA_LDFLAGS="${EXTRA_LDFLAGS:-}"
 FFMPEG_ARCH="${FFMPEG_ARCH:-$(uname -m)}"
 FFMPEG_TARGET_OS="${FFMPEG_TARGET_OS:-}"
+FFMPEG_TOOLCHAIN="${FFMPEG_TOOLCHAIN:-}"
 CC="${CC:-$(uname | grep -q Linux && (command -v musl-gcc >/dev/null 2>&1 && echo musl-gcc || echo gcc) || echo "")}"
 AR="${AR:-}"
 
@@ -49,6 +50,7 @@ cd "source"
   --disable-swscale \
   --disable-network \
   --disable-bzlib \
+  --disable-iconv \
   --disable-audiotoolbox \
   --disable-videotoolbox \
   --disable-avfoundation \
@@ -109,6 +111,7 @@ cd "source"
   --enable-decoder=wmv3 \
   --arch=${FFMPEG_ARCH} \
   ${FFMPEG_TARGET_OS:+--target-os=${FFMPEG_TARGET_OS}} \
+  ${FFMPEG_TOOLCHAIN:+--toolchain=${FFMPEG_TOOLCHAIN}} \
   ${CC:+--cc=${CC}} \
   ${AR:+--ar=${AR}} \
   ${EXTRA_CFLAGS:+--extra-cflags="${EXTRA_CFLAGS}"} \
@@ -118,4 +121,4 @@ make -j"${JOBS}"
 make install
 
 echo "FFmpeg static libs installed to ${OUTPUT_DIR}"
-ls "${OUTPUT_DIR}/lib/"*.a
+ls "${OUTPUT_DIR}/lib/"*.a "${OUTPUT_DIR}/lib/"*.lib 2>/dev/null || true
