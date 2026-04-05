@@ -12,5 +12,8 @@
   "files": [
     "ffprobe.darwin-x64.node"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  }
 }

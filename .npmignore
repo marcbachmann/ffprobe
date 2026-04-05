@@ -2,6 +2,7 @@ Cargo.toml
 Cargo.lock
 build.rs
 src/
+test/
 target/
 .github/
 artifacts/
@@ -9,3 +10,4 @@ npm/
 *.node
 CLAUDE.md
 .serena/
+.claude/

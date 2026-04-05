@@ -15,5 +15,8 @@
   "files": [
     "ffprobe.linux-arm64-musl.node"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  }
 }
