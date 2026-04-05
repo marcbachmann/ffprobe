@@ -2,8 +2,11 @@ name: CI
 
 on:
   push:
-    branches: [main]
   pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
 
 env:
   APP_NAME: ffprobe
@@ -42,6 +45,11 @@ jobs:
           - host: ubuntu-24.04-arm
             target: aarch64-unknown-linux-gnu
 
+          # Windows x64 — MSYS2 builds static FFmpeg; MSVC toolchain builds napi
+          - host: windows-latest
+            target: x86_64-pc-windows-msvc
+            cargo_home: C:/cargo
+
     runs-on: ${{ matrix.settings.host }}
 
     steps:
@@ -58,9 +66,9 @@ jobs:
       - uses: actions/cache@v5
         with:
           path: |
-            /tmp/cargo/registry/index/
-            /tmp/cargo/registry/cache/
-            /tmp/cargo/git/db/
+            ${{ matrix.settings.cargo_home || '/tmp/cargo' }}/registry/index/
+            ${{ matrix.settings.cargo_home || '/tmp/cargo' }}/registry/cache/
+            ${{ matrix.settings.cargo_home || '/tmp/cargo' }}/git/db/
             target/
           key: ${{ matrix.settings.target }}-cargo-${{ hashFiles('Cargo.lock', 'Cargo.toml', '.cargo/config.toml') }}
           restore-keys: |
@@ -74,8 +82,28 @@ jobs:
         id: cache-ffmpeg
         uses: actions/cache@v5
         with:
-          path: /tmp/ffmpeg-build/output
+          path: ${{ runner.os == 'Windows' && 'C:/ffmpeg-build/output' || '/tmp/ffmpeg-build/output' }}
           key: ffmpeg-8.1-${{ matrix.settings.target }}-${{ hashFiles('scripts/build-ffmpeg.sh') }}
+
+      - name: Setup MSVC environment (Windows)
+        if: ${{ runner.os == 'Windows' }}
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+
+      - name: Setup MSYS2 (Windows)
+        if: ${{ runner.os == 'Windows' }}
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MSYS
+          update: false
+          path-type: inherit
+          install: make nasm perl diffutils
+
+      - name: Build static FFmpeg (Windows)
+        if: ${{ steps.cache-ffmpeg.outputs.cache-hit != 'true' && runner.os == 'Windows' }}
+        shell: msys2 {0}
+        run: WORKDIR=C:/ffmpeg-build FFMPEG_TOOLCHAIN=msvc bash scripts/build-ffmpeg.sh
 
       - name: Build static FFmpeg (macOS)
         if: ${{ steps.cache-ffmpeg.outputs.cache-hit != 'true' && runner.os == 'macOS' }}
@@ -143,6 +171,25 @@ jobs:
             -v ${{ github.workspace }}:/build
             -w /build
           run: npm test
+
+      - name: Remove Git usr/bin from PATH (Windows)
+        if: ${{ runner.os == 'Windows' }}
+        shell: powershell
+        run: |
+          $newPath = ($env:PATH -split ';' | Where-Object { $_ -notlike '*Git\usr\bin*' }) -join ';'
+          "PATH=$newPath" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+      - name: Build (Windows)
+        if: ${{ runner.os == 'Windows' }}
+        shell: cmd
+        env:
+          CARGO_HOME: C:/cargo
+          FFMPEG_DIR: C:/ffmpeg-build/output
+        run: npm ci && node_modules\.bin\napi build --platform --release --features static --js binding.js --dts binding.d.ts
+
+      - name: Test (Windows)
+        if: ${{ runner.os == 'Windows' }}
+        run: npm test
 
       - name: Upload artifact
         uses: actions/upload-artifact@v7

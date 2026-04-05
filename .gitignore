@@ -6,3 +6,5 @@ CLAUDE.md
 .serena/
 ffmpeg-build/
 ffmpeg-static/
+.rustfmt.toml
+scripts/

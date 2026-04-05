@@ -1,7 +1,5 @@
 # @marcbachmann/ffprobe
 
-Non-blocking Node.js native bindings for `ffprobe`. FFmpeg is statically linked into the `.node` binary — no system `ffprobe` binary needed, no postInstall scripts, no binary downloads at install time.
-
 - **No postInstall scripts** — installation is a plain file copy, nothing executes
 - **No binary downloads** — FFmpeg is statically linked into the `.node` addon; works in air-gapped environments and behind corporate proxies
 - **Non-blocking** — probing runs inside a Rust thread pool, the Node.js event loop stays free
@@ -18,6 +16,7 @@ Non-blocking Node.js native bindings for `ffprobe`. FFmpeg is statically linked 
 | Linux arm64 (glibc) | `@marcbachmann/ffprobe-linux-arm64-gnu` |
 | Linux x64 (musl / Alpine) | `@marcbachmann/ffprobe-linux-x64-musl` |
 | Linux arm64 (musl / Alpine) | `@marcbachmann/ffprobe-linux-arm64-musl` |
+| Windows x64 | `@marcbachmann/ffprobe-win32-x64-msvc` |
 
 The platform packages are installed automatically as `optionalDependencies`.
 
