@@ -1,6 +1,6 @@
 {
   "name": "@marcbachmann/ffprobe",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Node.js native bindings for ffprobe non-blocking file and stream probing",
   "keywords": [
     "ffprobe",
@@ -36,12 +36,12 @@
     "@napi-rs/cli": "^3.6.0"
   },
   "optionalDependencies": {
-    "@marcbachmann/ffprobe-darwin-x64": "1.0.0",
-    "@marcbachmann/ffprobe-darwin-arm64": "1.0.0",
-    "@marcbachmann/ffprobe-linux-x64-musl": "1.0.0",
-    "@marcbachmann/ffprobe-linux-arm64-musl": "1.0.0",
-    "@marcbachmann/ffprobe-linux-x64-gnu": "1.0.0",
-    "@marcbachmann/ffprobe-linux-arm64-gnu": "1.0.0"
+    "@marcbachmann/ffprobe-darwin-x64": "1.0.1",
+    "@marcbachmann/ffprobe-darwin-arm64": "1.0.1",
+    "@marcbachmann/ffprobe-linux-x64-musl": "1.0.1",
+    "@marcbachmann/ffprobe-linux-arm64-musl": "1.0.1",
+    "@marcbachmann/ffprobe-linux-x64-gnu": "1.0.1",
+    "@marcbachmann/ffprobe-linux-arm64-gnu": "1.0.1"
   },
   "napi": {
     "binaryName": "ffprobe",

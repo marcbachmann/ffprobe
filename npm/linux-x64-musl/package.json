@@ -1,6 +1,6 @@
 {
   "name": "@marcbachmann/ffprobe-linux-x64-musl",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "ffprobe native binary for Linux x64 musl (Alpine)",
   "os": [
     "linux"
@@ -18,5 +18,14 @@
   "license": "MIT",
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marcbachmann/ffprobe.git"
+  },
+  "author": "Marc Bachmann",
+  "bugs": {
+    "url": "https://github.com/marcbachmann/ffprobe/issues"
+  },
+  "homepage": "https://github.com/marcbachmann/ffprobe#readme"
 }

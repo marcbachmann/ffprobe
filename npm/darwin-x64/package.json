@@ -1,6 +1,6 @@
 {
   "name": "@marcbachmann/ffprobe-darwin-x64",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "ffprobe native binary for macOS x64",
   "os": [
     "darwin"
@@ -15,5 +15,14 @@
   "license": "MIT",
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marcbachmann/ffprobe.git"
+  },
+  "author": "Marc Bachmann",
+  "bugs": {
+    "url": "https://github.com/marcbachmann/ffprobe/issues"
+  },
+  "homepage": "https://github.com/marcbachmann/ffprobe#readme"
 }
