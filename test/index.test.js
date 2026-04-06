@@ -11,6 +11,7 @@ const testData = join(__dirname, 'test_data')
 const TEST_FILE = join(testData, 'test.mp4')
 const TEST_FILE_LARGE = join(testData, 'test_large.mp4')
 const TEST_FILE_LARGE_NO_FASTSTART = join(testData, 'test_large_no_faststart.mp4')
+const TEST_FILE_CORRUPT = join(testData, 'corrupt.mp4')
 
 async function isRejected(promise) {
   try {
@@ -105,6 +106,13 @@ describe('ffprobe(buffer)', () => {
 
   test('rejects on non-media bytes', async () => {
     const err = await isRejected(ffprobe(Buffer.from('not a media file at all, just garbage text')))
+    assert.ok(err instanceof Error)
+    assert.match(err.message, /Invalid data found when processing input/)
+    assert.equal(err.code, 'GenericFailure')
+  })
+
+  test('rejects on corrupt video', async function () {
+    const err = await isRejected(ffprobe(TEST_FILE_CORRUPT))
     assert.ok(err instanceof Error)
     assert.match(err.message, /Invalid data found when processing input/)
     assert.equal(err.code, 'GenericFailure')

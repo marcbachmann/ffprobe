@@ -15,6 +15,7 @@ fn init_ffmpeg() {
   static ONCE: std::sync::OnceLock<()> = std::sync::OnceLock::new();
   ONCE.get_or_init(|| {
     ffmpeg_next::init().expect("ffmpeg init failed");
+    ffmpeg_next::util::log::set_level(ffmpeg_next::util::log::Level::Fatal);
   });
 }
 
