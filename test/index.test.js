@@ -1,7 +1,7 @@
 'use strict'
-const {test, describe} = require('node:test')
+const {test, describe, before, after} = require('node:test')
 const assert = require('assert/strict')
-const {createReadStream, readFileSync, readdirSync} = require('fs')
+const {createReadStream, readFileSync, readdirSync, mkdtempSync, rmSync} = require('fs')
 const {join, extname} = require('path')
 const {Readable} = require('stream')
 const os = require('os')
@@ -309,10 +309,21 @@ describe('stream abort and error handling', () => {
 })
 
 describe('temp file cleanup', () => {
+  let tmpDir
+
+  before(() => {
+    tmpDir = mkdtempSync(join(os.tmpdir(), 'ffprobe-test-'))
+    process.env.FFPROBE_TMPDIR = tmpDir
+  })
+
+  after(() => {
+    delete process.env.FFPROBE_TMPDIR
+    rmSync(tmpDir, {recursive: true, force: true})
+  })
+
   function listTmpFiles() {
-    const dir = os.tmpdir()
     try {
-      return new Set(readdirSync(dir).map((f) => join(dir, f)))
+      return new Set(readdirSync(tmpDir).map((f) => join(tmpDir, f)))
     } catch {
       return new Set()
     }
