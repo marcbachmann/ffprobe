@@ -18,12 +18,25 @@ function ffprobe(input) {
   )
 }
 
+// Number of stream chunks to batch per push() call, reducing JS→Rust
+// Promise round-trips at the cost of slightly larger per-call allocations.
+const PUSH_BATCH_SIZE = 4
+
 async function ffprobeStream(stream) {
   const probe = new ProbeTask()
   const result = probe.start()
   let streamError
   try {
-    for await (const chunk of stream) if (!(await probe.push(chunk))) break
+    let batch = []
+    for await (const chunk of stream) {
+      batch.push(chunk)
+      if (batch.length >= PUSH_BATCH_SIZE) {
+        const accepted = await probe.push(batch)
+        batch = []
+        if (!accepted) break
+      }
+    }
+    if (batch.length > 0) await probe.push(batch)
   } catch (err) {
     streamError = err
   } finally {
