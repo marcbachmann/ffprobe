@@ -32,7 +32,7 @@ const IN_MEM_THRESHOLD: u64 = 512 * 1024;
 ///   backpressure without blocking the JS thread.
 #[napi]
 pub struct ProbeTask {
-  tx: Option<tokio::sync::mpsc::Sender<Vec<Vec<u8>>>>,
+  tx: Option<tokio::sync::mpsc::Sender<Vec<u8>>>,
 }
 
 #[napi]
@@ -79,7 +79,7 @@ impl ProbeTask {
   /// Must be called exactly once, before any `push()` / `finish()` calls.
   #[napi]
   pub fn start<'env>(&mut self, env: &'env Env) -> Result<PromiseRaw<'env, serde_json::Value>> {
-    let (tx, mut rx) = tokio::sync::mpsc::channel::<Vec<Vec<u8>>>(1);
+    let (tx, mut rx) = tokio::sync::mpsc::channel::<Vec<u8>>(1);
     self.tx = Some(tx);
 
     env.spawn_future(async move {
@@ -124,40 +124,38 @@ impl ProbeTask {
                 break;
             }
 
-            batch = rx.recv() => {
-                let chunks = match batch {
+            chunk = rx.recv() => {
+                let bytes = match chunk {
                     Some(b) => b,
                     None => break, // channel closed (finish() called)
                 };
-                'batch: for bytes in chunks {
-                    let len = bytes.len() as u64;
+                let len = bytes.len() as u64;
 
-                    if let Some(ref mut f) = temp_writer {
-                        if let Err(e) = f.write_all(&bytes) {
-                            write_err = Some(Error::new(Status::GenericFailure, e.to_string()));
-                            break 'batch;
-                        }
+                if let Some(ref mut f) = temp_writer {
+                    if let Err(e) = f.write_all(&bytes) {
+                        write_err = Some(Error::new(Status::GenericFailure, e.to_string()));
+                        break;
+                    }
+                    let (lock, cvar) = &*state;
+                    let mut s = lock.lock().unwrap();
+                    s.written += len;
+                    cvar.notify_all();
+                } else {
+                    let written = {
                         let (lock, cvar) = &*state;
                         let mut s = lock.lock().unwrap();
+                        s.mem_buf.extend_from_slice(&bytes);
                         s.written += len;
                         cvar.notify_all();
-                    } else {
-                        let written = {
-                            let (lock, cvar) = &*state;
-                            let mut s = lock.lock().unwrap();
-                            s.mem_buf.extend_from_slice(&bytes);
-                            s.written += len;
-                            cvar.notify_all();
-                            s.written
-                        };
+                        s.written
+                    };
 
-                        if written >= IN_MEM_THRESHOLD {
-                            match spill_to_disk(&state) {
-                                Ok(nf) => temp_writer = Some(nf),
-                                Err(e) => {
-                                    write_err = Some(e);
-                                    break 'batch;
-                                }
+                    if written >= IN_MEM_THRESHOLD {
+                        match spill_to_disk(&state) {
+                            Ok(nf) => temp_writer = Some(nf),
+                            Err(e) => {
+                                write_err = Some(e);
+                                break;
                             }
                         }
                     }
@@ -193,18 +191,17 @@ impl ProbeTask {
     })
   }
 
-  /// Push one or more chunks of bytes.  Returns a Promise that resolves to
-  /// `true` if all chunks were accepted (keep pushing), or `false` if FFmpeg
-  /// has already finished and no more data is needed.
+  /// Push a chunk of bytes.  Returns a Promise that resolves to `true`
+  /// if the chunk was accepted (keep pushing), or `false` if FFmpeg has
+  /// already finished and no more data is needed.
   #[napi]
-  pub async fn push(&self, chunks: Vec<Buffer>) -> Result<bool> {
+  pub async fn push(&self, chunk: Buffer) -> Result<bool> {
     let tx = self
       .tx
       .as_ref()
       .ok_or_else(|| Error::new(Status::GenericFailure, "push() called before start()"))?;
 
-    let batch: Vec<Vec<u8>> = chunks.iter().map(|c| c.to_vec()).collect();
-    match tx.send(batch).await {
+    match tx.send(chunk.to_vec()).await {
       Ok(()) => Ok(true),
       // Channel closed — FFmpeg finished or write loop broke.
       Err(_) => Ok(false),

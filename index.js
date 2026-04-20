@@ -31,12 +31,12 @@ async function ffprobeStream(stream) {
     for await (const chunk of stream) {
       batch.push(chunk)
       if (batch.length >= PUSH_BATCH_SIZE) {
-        const accepted = await probe.push(batch)
+        const accepted = await probe.push(Buffer.concat(batch))
         batch = []
         if (!accepted) break
       }
     }
-    if (batch.length > 0) await probe.push(batch)
+    if (batch.length > 0) await probe.push(Buffer.concat(batch))
   } catch (err) {
     streamError = err
   } finally {

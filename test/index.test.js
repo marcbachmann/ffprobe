@@ -132,6 +132,21 @@ describe('ffprobe(stream)', () => {
     assert.equal(vFile.width, vStream.width)
   })
 
+  test('readable: accepts Uint8Array chunks (not Buffer)', async () => {
+    // Node.js PassThrough streams and some transform streams can yield Uint8Array
+    // instead of Buffer. Ensure we handle them correctly.
+    const fileData = readFileSync(TEST_FILE)
+    const stream = new Readable({read() {}})
+    setImmediate(() => {
+      // Push raw Uint8Array, not a Buffer
+      stream.push(new Uint8Array(fileData.buffer, fileData.byteOffset, fileData.byteLength))
+      stream.push(null)
+    })
+    const r = await ffprobe(stream)
+    assert.ok(Array.isArray(r.streams))
+    assert.equal(r.streams.length, 2)
+  })
+
   test('throws TypeError for invalid input', async () => {
     assert.throws(
       () => ffprobe(42),
@@ -438,6 +453,22 @@ describe('Web ReadableStream', () => {
     const v = r.streams.find((s) => s.codec_type === 'video')
     assert.equal(v.width, 64)
     assert.equal(v.height, 64)
+  })
+
+  test('accepts Uint8Array chunks (fetch body scenario)', async () => {
+    // fetch() response bodies yield Uint8Array, not Buffer. This is the real-world
+    // case that triggered the "Failed to get Buffer pointer and length" error.
+    const fileData = readFileSync(TEST_FILE)
+    const webStream = new ReadableStream({
+      start(controller) {
+        // Enqueue as plain Uint8Array, same as a fetch response body would
+        controller.enqueue(new Uint8Array(fileData.buffer, fileData.byteOffset, fileData.byteLength))
+        controller.close()
+      }
+    })
+    const r = await ffprobe(webStream)
+    assert.ok(Array.isArray(r.streams))
+    assert.equal(r.streams.length, 2)
   })
 
   test('Web ReadableStream error is propagated as rejection', async () => {

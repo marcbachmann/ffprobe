@@ -25,11 +25,11 @@ export declare class ProbeTask {
    */
   start(): Promise<any>
   /**
-   * Push one or more chunks of bytes.  Returns a Promise that resolves to
-   * `true` if all chunks were accepted (keep pushing), or `false` if FFmpeg
-   * has already finished and no more data is needed.
+   * Push a chunk of bytes.  Returns a Promise that resolves to `true`
+   * if the chunk was accepted (keep pushing), or `false` if FFmpeg has
+   * already finished and no more data is needed.
    */
-  push(chunks: Array<Buffer>): Promise<boolean>
+  push(chunk: Buffer): Promise<boolean>
   /** Signal that the stream has ended (EOF). */
   finish(): void
 }
