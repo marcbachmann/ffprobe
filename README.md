@@ -58,6 +58,23 @@ interface ProbeResult {
 
 See [index.d.ts](index.d.ts) for the full type definitions.
 
+## Environment variables
+
+| Variable | Description |
+|---|---|
+| `FFPROBE_TMPDIR` | Directory used for spill files during stream probing (see below). Defaults to the OS temp directory. |
+
+### Stream spilling
+
+When probing a Readable or Web ReadableStream, incoming bytes are buffered in memory
+up to 512 KiB. If the stream exceeds that threshold, data spills to a temporary file
+so that FFmpeg can seek backwards — required for formats like MP4 that store their
+metadata (moov atom) at the end of the file. The temp file is deleted as soon as
+probing completes.
+
+Set `FFPROBE_TMPDIR` to control where spill files are written, for example to keep
+them on a fast local disk or an in-memory filesystem (`/dev/shm` on Linux).
+
 ## License
 
 MIT
