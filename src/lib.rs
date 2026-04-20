@@ -225,8 +225,11 @@ impl ProbeTask {
 fn spill_to_disk(
   state: &Arc<(Mutex<WriteState>, Condvar)>,
 ) -> napi::Result<tempfile::NamedTempFile> {
-  let mut named_temp = tempfile::NamedTempFile::new()
-    .map_err(|e| Error::new(Status::GenericFailure, e.to_string()))?;
+  let mut named_temp = match std::env::var_os("FFPROBE_TMPDIR") {
+    Some(dir) => tempfile::Builder::new().tempfile_in(dir),
+    None => tempfile::NamedTempFile::new(),
+  }
+  .map_err(|e| Error::new(Status::GenericFailure, e.to_string()))?;
 
   let file_reader = named_temp
     .reopen()
