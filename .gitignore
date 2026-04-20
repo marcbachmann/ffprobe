@@ -1,10 +1,8 @@
-target/
-artifacts/
-*.node
-CLAUDE.md
 .claude/
 .serena/
+*.node
+artifacts/
+CLAUDE.md
 ffmpeg-build/
 ffmpeg-static/
-.rustfmt.toml
-scripts/
+target/

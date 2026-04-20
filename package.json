@@ -1,6 +1,6 @@
 {
   "name": "@marcbachmann/ffprobe",
-  "version": "1.0.1",
+  "version": "0.0.0-placeholder",
   "description": "Node.js native bindings for ffprobe non-blocking file and stream probing",
   "keywords": [
     "ffprobe",
@@ -29,20 +29,10 @@
     "build": "FFMPEG_DIR=/tmp/ffmpeg-build/output PKG_CONFIG_PATH=/tmp/ffmpeg-build/output/lib/pkgconfig CARGO_TARGET_AARCH64_UNKNOWN_LINUX_MUSL_LINKER=gcc CARGO_TARGET_X86_64_UNKNOWN_LINUX_MUSL_LINKER=gcc RUSTC_WRAPPER=scripts/rustc-musl-wrapper.sh napi build --platform --release --features static --js binding.js --dts binding.d.ts",
     "build:debug": "FFMPEG_DIR=/tmp/ffmpeg-build/output PKG_CONFIG_PATH=/tmp/ffmpeg-build/output/lib/pkgconfig CARGO_TARGET_AARCH64_UNKNOWN_LINUX_MUSL_LINKER=gcc CARGO_TARGET_X86_64_UNKNOWN_LINUX_MUSL_LINKER=gcc RUSTC_WRAPPER=scripts/rustc-musl-wrapper.sh napi build --platform --features static --js binding.js --dts binding.d.ts",
     "generate-snapshots": "node scripts/generate-snapshots.js",
-    "test": "node --test test/index.test.js",
-    "prepublishOnly": "napi pre-publish --no-gh-release"
+    "test": "node --test test/index.test.js"
   },
   "devDependencies": {
     "@napi-rs/cli": "^3.6.0"
-  },
-  "optionalDependencies": {
-    "@marcbachmann/ffprobe-darwin-x64": "1.0.1",
-    "@marcbachmann/ffprobe-darwin-arm64": "1.0.1",
-    "@marcbachmann/ffprobe-linux-x64-musl": "1.0.1",
-    "@marcbachmann/ffprobe-linux-arm64-musl": "1.0.1",
-    "@marcbachmann/ffprobe-linux-x64-gnu": "1.0.1",
-    "@marcbachmann/ffprobe-linux-arm64-gnu": "1.0.1",
-    "@marcbachmann/ffprobe-win32-x64-msvc": "1.0.1"
   },
   "napi": {
     "binaryName": "ffprobe",
