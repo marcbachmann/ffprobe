@@ -1,5 +1,6 @@
 .claude/
 .serena/
+.gstack/
 *.node
 artifacts/
 CLAUDE.md
